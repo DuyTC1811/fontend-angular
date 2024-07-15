@@ -19,15 +19,13 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   public signup(singup: SignupReq): Observable<SignupResp> {
-    return this.http.post<SignupResp>(
-      `${AUTH_API}signup`,
-      {
-        username: singup.username,
-        password: singup.password,
-        confirmPassword: singup.confirmPassword,
-        mobile: singup.mobile,
-        email: singup.email,
-      });
+    return this.http.post<SignupResp>(`${AUTH_API}signup`, {
+      username: singup.username,
+      password: singup.password,
+      confirmPassword: singup.confirmPassword,
+      mobile: singup.mobile,
+      email: singup.email,
+    });
   }
 
   public login(login: LoginReq): Observable<LoginResp> {
