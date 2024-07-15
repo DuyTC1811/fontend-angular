@@ -1,0 +1,27 @@
+<form (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username</label>
+      <input id="username" [(ngModel)]="signUp.username" name="username" type="text" placeholder="Username" required>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input id="password" [(ngModel)]="signUp.password" name="password" type="password" placeholder="Password" required>
+    </div>
+    <div>
+        <label for="confirmPassword">confirmPassword</label>
+        <input id="confirmPassword" [(ngModel)]="signUp.confirmPassword" name="confirmPassword" type="password" placeholder="confirmPassword" required>
+      </div>
+      <div>
+        <label for="mobile">mobile</label>
+        <input id="mobile" [(ngModel)]="signUp.mobile" name="mobile" type="mobile" placeholder="mobile" required>
+      </div>
+      <div>
+        <label for="email">email</label>
+        <input id="email" [(ngModel)]="signUp.email" name="email" type="email" placeholder="email" required>
+      </div>
+
+    <button type="submit">SignUp</button>
+    <!-- <div *ngIf="isLoginFailed">
+      {{ errorMessage }}
+    </div> -->
+  </form>

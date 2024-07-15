@@ -1,6 +1,7 @@
-export interface Signup {
+export interface SignupReq {
     username: string;
     password: string;
     confirmPassword: string;
-    email:string;
+    mobile: string;
+    email: string;
 }
