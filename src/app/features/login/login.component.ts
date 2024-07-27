@@ -6,11 +6,12 @@ import { LoginReq } from '../../core/models/login-req';
 import { LoginResp } from '../../core/models/login-resp';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
