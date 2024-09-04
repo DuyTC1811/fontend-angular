@@ -1,15 +1,9 @@
-<nav>
-  <div>
-    <a routerLink="/home">Home</a>
-  </div>
-  <div>
-    <a routerLink="/signup">Signup</a>
-  </div>
-  <div>
-    <a routerLink="/login">Login</a>
-  </div>
-  <div>
-    <a routerLink="/category">Category</a>
-  </div>
-</nav>
-<router-outlet></router-outlet>
+<app-header></app-header>
+<app-navbar></app-navbar>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<!-- footer luôn nằm dưới cùng -->
+<app-footer></app-footer>
