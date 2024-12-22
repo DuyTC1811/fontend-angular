@@ -18,13 +18,13 @@ const httpOptions = {
 export class AuthService {
   constructor(private http: HttpClient) {}
 
-  public signup(singup: SignupReq): Observable<SignupResp> {
+  public signup(singUp: SignupReq): Observable<SignupResp> {
     return this.http.post<SignupResp>(`${AUTH_API}signup`, {
-      username: singup.username,
-      password: singup.password,
-      confirmPassword: singup.confirmPassword,
-      mobile: singup.mobile,
-      email: singup.email,
+      username: singUp.username,
+      password: singUp.password,
+      confirmPassword: singUp.confirmPassword,
+      mobile: singUp.mobile,
+      email: singUp.email,
     });
   }
 
