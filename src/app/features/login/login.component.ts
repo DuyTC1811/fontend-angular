@@ -10,7 +10,6 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -43,7 +42,7 @@ export class LoginComponent implements OnInit {
     };
 
     try {
-      
+
       const response: LoginResp = await lastValueFrom(
         this.authService.login(loginReq)
       );
