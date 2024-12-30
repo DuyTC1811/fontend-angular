@@ -1,1 +1,26 @@
-<p>category works!</p>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Person</th>
+        <th scope="col">Most interest in</th>
+        <th scope="col">Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of data; track item.id) {
+      <tr>
+        <th scope="row">{{ item.persion }}</th>
+        <td>{{ item.interest }}</td>
+        <td>{{ item.age }}</td>
+      </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr>
+        <th scope="row" colspan="2">Average age</th>
+        <td>{{ averageAge }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
