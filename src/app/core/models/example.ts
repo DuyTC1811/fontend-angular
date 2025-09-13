@@ -1,6 +1,6 @@
 export interface Example {
   id: number;
-  persion?: String;
+  person?: String;
   interest?: String;
   age: number;
 }
