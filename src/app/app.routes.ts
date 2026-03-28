@@ -7,9 +7,29 @@ import { ForgotPasswordComponent } from './features/forgot-password/forgot-passw
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // Eager — trang chính, user luôn cần
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'category', component: CategoryComponent },
+
+  // Lazy — trang ít dùng hơn
+  {
+    path: 'signup',
+    loadComponent: () => import('./features/signup/signup.component')
+      .then(m => m.SignupComponent)
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./features/forgot-password/forgot-password.component')
+      .then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'category',
+    loadComponent: () => import('./features/category/category.component')
+      .then(m => m.CategoryComponent)
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/profile.component')
+      .then(m => m.ProfileComponent)
+  }
 ];

@@ -1,0 +1,36 @@
+<!-- Nút bật 2FA -->
+@if (!is2FAEnabled && !showSetup2FA) {
+  <h3>Bảo mật 2 lớp</h3>
+  <p>Tăng cường bảo mật tài khoản với xác thực 2 bước</p>
+  <button (click)="onEnable2FA()">Bật 2FA</button>
+}
+
+<!-- Hiển thị QR + nhập code xác nhận -->
+@if (showSetup2FA) {
+  <h3>Thiết lập xác thực 2 bước</h3>
+
+  <div class="qr-container">
+    <p>1. Mở ứng dụng Google Authenticator hoặc Authy</p>
+    <p>2. Quét mã QR bên dưới</p>
+    <img [src]="qrImageUrl" alt="QR Code" width="200" height="200" />
+  </div>
+
+  <div class="verify-container">
+    <p>3. Nhập mã 6 số từ ứng dụng để xác nhận</p>
+    <input type="text" [(ngModel)]="totpCode"
+           maxlength="6" pattern="[0-9]*" inputmode="numeric"
+           placeholder="Nhập mã 6 số" />
+    <button (click)="onConfirmSetup()">Xác nhận</button>
+    <button (click)="showSetup2FA = false">Hủy</button>
+  </div>
+}
+
+<!-- Đã bật 2FA -->
+@if (is2FAEnabled) {
+  <p>✅ Xác thực 2 bước đã được bật</p>
+}
+
+<!-- Thông báo -->
+@if (message) {
+  <p>{{ message }}</p>
+}
