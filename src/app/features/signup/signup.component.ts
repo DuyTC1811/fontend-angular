@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SignupReq } from '../../core/models/signup-req';
@@ -9,7 +9,7 @@ import { SignupResp } from '../../core/models/signup-resp';
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss',
 })

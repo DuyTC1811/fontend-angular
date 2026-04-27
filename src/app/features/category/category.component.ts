@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { Example } from '../../core/models/example';
 
 @Component({
   selector: 'app-category',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
 })
