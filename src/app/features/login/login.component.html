@@ -6,29 +6,43 @@
       <img src="avatar.png" alt="User Avatar" />
     </div>
 
-    <form (ngSubmit)="onSubmit()">
-      <div class="input-group">
+    <form (submit)="onSubmit($event)">
+      <div class="input-group" [class.has-error]="shouldShowUsernameError()">
         <label for="username">Username</label>
+
         <input
           id="username"
-          [(ngModel)]="loginForm.username"
-          name="username"
           type="text"
           placeholder="Username"
-          required
-          />
+          [formField]="loginForm.username"
+        />
+
+        @if (shouldShowUsernameError()) {
+          <div class="field-error">
+            @for (error of loginForm.username().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
       </div>
 
-      <div class="input-group">
+      <div class="input-group" [class.has-error]="shouldShowPasswordError()">
         <label for="password">Password</label>
+
         <input
           id="password"
-          [(ngModel)]="loginForm.password"
-          name="password"
           type="password"
           placeholder="Password"
-          required
-          />
+          [formField]="loginForm.password"
+        />
+
+        @if (shouldShowPasswordError()) {
+          <div class="field-error">
+            @for (error of loginForm.password().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
       </div>
 
       <div class="input-group remember-me">
@@ -40,13 +54,19 @@
         <a routerLink="/forgot-password">Forgot Password?</a>
       </div>
 
-      <button type="submit" class="login-button">Log In</button>
-      @if (isLoginFailed) {
+      <button type="submit" class="login-button" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          Đang đăng nhập...
+        } @else {
+          Log In
+        }
+      </button>
+
+      @if (isLoginFailed()) {
         <div class="error-message">
-          {{ errorMessage }}
+          {{ errorMessage() }}
         </div>
       }
-
     </form>
   </div>
 </div>

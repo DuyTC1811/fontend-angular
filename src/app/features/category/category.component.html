@@ -1,26 +1,98 @@
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">Person</th>
-        <th scope="col">Most interest in</th>
-        <th scope="col">Age</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (item of data; track item.id) {
-      <tr>
-        <th scope="row">{{ item.person }}</th>
-        <td>{{ item.interest }}</td>
-        <td>{{ item.age }}</td>
-      </tr>
-      }
-    </tbody>
-    <tfoot>
-      <tr>
-        <th scope="row" colspan="2">Average age</th>
-        <td>{{ averageAge }}</td>
-      </tr>
-    </tfoot>
-  </table>
+<div class="category-page">
+  <div class="form-card">
+    <h2>{{ isEditMode ? 'Update Person' : 'Create Person' }}</h2>
+
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="person">Person</label>
+        <input
+          id="person"
+          name="person"
+          type="text"
+          [(ngModel)]="form.person"
+          placeholder="Enter person name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="interest">Most interest in</label>
+        <input
+          id="interest"
+          name="interest"
+          type="text"
+          [(ngModel)]="form.interest"
+          placeholder="Enter interest"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input
+          id="age"
+          name="age"
+          type="number"
+          [(ngModel)]="form.age"
+          placeholder="Enter age"
+          required
+        />
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+
+        @if (isEditMode) {
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancel
+          </button>
+        }
+      </div>
+    </form>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Person</th>
+          <th scope="col">Most interest in</th>
+          <th scope="col">Age</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of data(); track item.id) {
+          <tr>
+            <th scope="row">{{ item.person }}</th>
+            <td>{{ item.interest }}</td>
+            <td>{{ item.age }}</td>
+            <td class="actions">
+              <button type="button" class="btn btn-edit" (click)="edit(item)">
+                Edit
+              </button>
+
+              <button type="button" class="btn btn-delete" (click)="delete(item.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="empty-data">No data</td>
+          </tr>
+        }
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th scope="row" colspan="2">Average age</th>
+          <td colspan="2">{{ averageAge() | number: '1.0-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </div>
