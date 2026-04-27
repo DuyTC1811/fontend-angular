@@ -5,7 +5,6 @@ import {
   signal,
 } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { StorageService } from '../../core/services/storage.service';
 import { LoginReq } from '../../core/models/login-req';
 import { LoginResp } from '../../core/models/login-resp';
 import { lastValueFrom } from 'rxjs/internal/lastValueFrom';

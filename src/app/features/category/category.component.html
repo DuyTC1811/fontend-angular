@@ -1,55 +1,70 @@
 <div class="category-page">
   <div class="form-card">
-    <h2>{{ isEditMode ? 'Update Person' : 'Create Person' }}</h2>
+    <h2>{{ isEditMode() ? 'Update Category' : 'Create Category' }}</h2>
 
     <form (ngSubmit)="save()">
       <div class="form-group">
-        <label for="person">Person</label>
+        <label for="name">Category Name</label>
         <input
-          id="person"
-          name="person"
+          id="name"
+          name="name"
           type="text"
-          [(ngModel)]="form.person"
-          placeholder="Enter person name"
+          [(ngModel)]="form.name"
+          placeholder="Enter category name"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="interest">Most interest in</label>
+        <label for="description">Description</label>
         <input
-          id="interest"
-          name="interest"
+          id="description"
+          name="description"
           type="text"
-          [(ngModel)]="form.interest"
-          placeholder="Enter interest"
-          required
+          [(ngModel)]="form.description"
+          placeholder="Enter description"
         />
       </div>
 
       <div class="form-group">
-        <label for="age">Age</label>
+        <label for="displayOrder">Display Order</label>
         <input
-          id="age"
-          name="age"
+          id="displayOrder"
+          name="displayOrder"
           type="number"
-          [(ngModel)]="form.age"
-          placeholder="Enter age"
+          [(ngModel)]="form.displayOrder"
+          placeholder="Enter display order"
           required
         />
+      </div>
+
+      <div class="form-group checkbox-group">
+        <input
+          id="enabled"
+          name="enabled"
+          type="checkbox"
+          [(ngModel)]="form.enabled"
+        />
+        <label for="enabled">Enabled</label>
       </div>
 
       <div class="button-group">
-        <button type="submit" class="btn btn-primary">
-          {{ isEditMode ? 'Update' : 'Create' }}
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          {{ isEditMode() ? 'Update' : 'Create' }}
         </button>
 
-        @if (isEditMode) {
+        @if (isEditMode()) {
           <button type="button" class="btn btn-secondary" (click)="cancel()">
             Cancel
           </button>
         }
       </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
     </form>
   </div>
 
@@ -57,42 +72,68 @@
     <table>
       <thead>
         <tr>
-          <th scope="col">Person</th>
-          <th scope="col">Most interest in</th>
-          <th scope="col">Age</th>
+          <th scope="col">Category Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Display Order</th>
+          <th scope="col">Enabled</th>
+          <th scope="col">Created Date</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
 
       <tbody>
-        @for (item of data(); track item.id) {
+        @for (item of categories(); track item.categoryId) {
           <tr>
-            <th scope="row">{{ item.person }}</th>
-            <td>{{ item.interest }}</td>
-            <td>{{ item.age }}</td>
+            <th scope="row">{{ item.name }}</th>
+            <td>{{ item.description || '-' }}</td>
+            <td>{{ item.displayOrder }}</td>
+            <td>
+              @if (item.enabled) {
+                <span class="badge badge-active">Active</span>
+              } @else {
+                <span class="badge badge-inactive">Inactive</span>
+              }
+            </td>
+            <td>{{ item.createdDate || '-' }}</td>
             <td class="actions">
               <button type="button" class="btn btn-edit" (click)="edit(item)">
                 Edit
               </button>
 
-              <button type="button" class="btn btn-delete" (click)="delete(item.id)">
+              <button
+                type="button"
+                class="btn btn-delete"
+                (click)="deleteCategory(item.categoryId)"
+              >
                 Delete
               </button>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="4" class="empty-data">No data</td>
+            <td colspan="6" class="empty-data">No categories</td>
           </tr>
         }
       </tbody>
 
       <tfoot>
         <tr>
-          <th scope="row" colspan="2">Average age</th>
-          <td colspan="2">{{ averageAge() | number: '1.0-2' }}</td>
+          <th scope="row" colspan="5">Total</th>
+          <td>{{ total() }}</td>
         </tr>
       </tfoot>
     </table>
+  </div>
+
+  <div class="pagination">
+    <button type="button" class="btn btn-secondary" (click)="previousPage()" [disabled]="offset() === 0">
+      Previous
+    </button>
+
+    <span>Limit: {{ limit() }} | Offset: {{ offset() }}</span>
+
+    <button type="button" class="btn btn-secondary" (click)="nextPage()" [disabled]="offset() + limit() >= total()">
+      Next
+    </button>
   </div>
 </div>
