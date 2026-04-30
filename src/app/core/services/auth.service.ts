@@ -18,7 +18,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class AuthService {
-private readonly http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   private readonly tokenStorage = inject(TokenStorageService);
 
   public signup(signUp: SignupReq): Observable<SignupResp> {

@@ -17,9 +17,14 @@
 
   <div class="verify-container">
     <p>3. Nhập mã 6 số từ ứng dụng để xác nhận</p>
-    <input type="text" [(ngModel)]="totpCode"
-           maxlength="6" pattern="[0-9]*" inputmode="numeric"
-           placeholder="Nhập mã 6 số" />
+    <input
+      type="text"
+      [(ngModel)]="totpCode"
+      maxlength="6"
+      pattern="[0-9]*"
+      inputmode="numeric"
+      placeholder="Nhập mã 6 số"
+    />
     <button (click)="onConfirmSetup()">Xác nhận</button>
     <button (click)="showSetup2FA = false">Hủy</button>
   </div>

@@ -1,6 +1,6 @@
 <div class="category-page">
   <div class="form-card">
-    <h2>{{ isEditMode() ? 'Update Category' : 'Create Category' }}</h2>
+    <h2>{{ isEditMode() ? "Update Category" : "Create Category" }}</h2>
 
     <form (ngSubmit)="save()">
       <div class="form-group">
@@ -50,7 +50,7 @@
 
       <div class="button-group">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
-          {{ isEditMode() ? 'Update' : 'Create' }}
+          {{ isEditMode() ? "Update" : "Create" }}
         </button>
 
         @if (isEditMode()) {
@@ -85,7 +85,7 @@
         @for (item of categories(); track item.categoryId) {
           <tr>
             <th scope="row">{{ item.name }}</th>
-            <td>{{ item.description || '-' }}</td>
+            <td>{{ item.description || "-" }}</td>
             <td>{{ item.displayOrder }}</td>
             <td>
               @if (item.enabled) {
@@ -94,7 +94,7 @@
                 <span class="badge badge-inactive">Inactive</span>
               }
             </td>
-            <td>{{ item.createdDate || '-' }}</td>
+            <td>{{ item.createdDate || "-" }}</td>
             <td class="actions">
               <button type="button" class="btn btn-edit" (click)="edit(item)">
                 Edit
@@ -126,13 +126,23 @@
   </div>
 
   <div class="pagination">
-    <button type="button" class="btn btn-secondary" (click)="previousPage()" [disabled]="offset() === 0">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="previousPage()"
+      [disabled]="offset() === 0"
+    >
       Previous
     </button>
 
     <span>Limit: {{ limit() }} | Offset: {{ offset() }}</span>
 
-    <button type="button" class="btn btn-secondary" (click)="nextPage()" [disabled]="offset() + limit() >= total()">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="nextPage()"
+      [disabled]="offset() + limit() >= total()"
+    >
       Next
     </button>
   </div>

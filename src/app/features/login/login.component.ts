@@ -50,7 +50,10 @@ export class LoginComponent {
     this.isLoginFailed.set(false);
     this.errorMessage.set('');
 
-    if (this.loginForm.username().invalid() || this.loginForm.password().invalid()) {
+    if (
+      this.loginForm.username().invalid() ||
+      this.loginForm.password().invalid()
+    ) {
       return;
     }
 
@@ -66,7 +69,6 @@ export class LoginComponent {
       console.log('Login successful', response);
 
       await this.router.navigate(['/home']);
-
     } catch (error: any) {
       console.log('Login failed', error);
 
