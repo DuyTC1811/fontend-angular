@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SignupReq } from '../../core/models/signup-req';
 import { AuthService } from '../../core/services/auth.service';
@@ -11,6 +11,7 @@ import { SignupResp } from '../../core/models/signup-resp';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './signup.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './signup.component.scss',
 })
 export class SignupComponent {

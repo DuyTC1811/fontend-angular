@@ -1,4 +1,4 @@
-import {Component}        from '@angular/core';
+import {Component, ChangeDetectionStrategy}        from '@angular/core';
 import { FormsModule } from '@angular/forms';  // ← thêm dòng này
 import {TwoFactorService}      from "../../core/services/two-factor.service";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
@@ -7,6 +7,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
   selector: 'app-profile',
   imports: [FormsModule],
   templateUrl: './profile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {

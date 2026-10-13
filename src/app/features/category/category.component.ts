@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
 import { CategoryInfo, CreateCategoryReq, UpdateCategoryReq } from '../../core/models/category.model';
@@ -8,6 +8,7 @@ import { CategoryInfo, CreateCategoryReq, UpdateCategoryReq } from '../../core/m
   standalone: true,
   imports: [FormsModule],
   templateUrl: './category.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './category.component.scss',
 })
 export class CategoryComponent implements OnInit{
