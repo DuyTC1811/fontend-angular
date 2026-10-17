@@ -1,0 +1,9 @@
+<div class="viewer" #viewer>
+  @if (loading()) {
+    <span class="status">Đang tải…</span>
+  }
+  @if (error(); as err) {
+    <span class="status error">{{ err }}</span>
+  }
+  <div class="pages" #pages></div>
+</div>
