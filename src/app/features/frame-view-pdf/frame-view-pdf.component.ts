@@ -1,8 +1,8 @@
-import { Component, effect, ElementRef, input, OnDestroy, signal, untracked, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, input, OnDestroy, signal, viewChild } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask } from 'pdfjs-dist';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs?v=${pdfjsLib.version}`;
 
 @Component({
   imports: [],
@@ -12,8 +12,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 })
 export class FrameViewPdfComponent implements OnDestroy {
   /** URL của file PDF, hoặc bytes (Uint8Array) */
-  src = input<string | Uint8Array>('/sample.pdf');
-  // src = input.required<string | Uint8Array>('https://pdfobject.com/pdf/sample.pdf');
+  src = input<string | Uint8Array>('https://pdfobject.com/pdf/sample.pdf');
   maxScale = input(1.5);
 
   loading = signal(false);
@@ -37,7 +36,8 @@ export class FrameViewPdfComponent implements OnDestroy {
       const src = this.src();
       const viewer = this.viewer()?.nativeElement;
       if (viewer) {
-        untracked(() => this.open(src, viewer)); // chỉ phụ thuộc src + viewer
+        this.open(src, viewer).then(r => {
+        });
       }
     });
   }
@@ -47,7 +47,6 @@ export class FrameViewPdfComponent implements OnDestroy {
     this.loading.set(true);
     this.error.set(null);
 
-    // Hủy document cũ (kể cả khi nó còn đang tải)
     this.cancelAll();
     this.pages()?.nativeElement.replaceChildren();
     this.pdf = undefined;
@@ -61,7 +60,9 @@ export class FrameViewPdfComponent implements OnDestroy {
 
     try {
       const pdf = await task.promise;
-      if (id !== this.openId) return; // src đã đổi, task này đã bị destroy ở lần open sau
+      if (id !== this.openId) {
+        return; // src đã đổi, task này đã bị destroy ở lần open sau
+      }
 
       this.pdf = pdf;
       this.setupObservers(viewer);
@@ -69,9 +70,13 @@ export class FrameViewPdfComponent implements OnDestroy {
       viewer.scrollTop = 0;
       await this.layout();
     } catch (e: any) {
-      if (id === this.openId) this.error.set('Không mở được PDF: ' + (e?.message ?? e));
+      if (id === this.openId) {
+        this.error.set('Không mở được PDF: ' + (e?.message ?? e));
+      }
     } finally {
-      if (id === this.openId) this.loading.set(false);
+      if (id === this.openId) {
+        this.loading.set(false);
+      }
     }
   }
 
@@ -82,7 +87,9 @@ export class FrameViewPdfComponent implements OnDestroy {
       entries => entries.forEach(e => {
         if (e.isIntersecting) {
           this.io!.unobserve(e.target);
-          this.drawPage(e.target as HTMLCanvasElement);
+          this.drawPage(e.target as HTMLCanvasElement)
+            .then(r => {
+            });
         }
       }),
       { root: viewer, rootMargin: '800px 0px' }
@@ -110,7 +117,9 @@ export class FrameViewPdfComponent implements OnDestroy {
 
     for (let n = 1; n <= pdf.numPages; n++) {
       const vp = (await pdf.getPage(n)).getViewport({ scale: this.scale });
-      if (pdf !== this.pdf) return; // document đã bị thay trong lúc dựng layout
+      if (pdf !== this.pdf) {
+        return;
+      }
       const cv = document.createElement('canvas');
       cv.dataset['page'] = String(n);
       cv.style.width = Math.floor(vp.width) + 'px';
@@ -123,9 +132,13 @@ export class FrameViewPdfComponent implements OnDestroy {
 
   private async drawPage(cv: HTMLCanvasElement) {
     const gen = this.gen, pdf = this.pdf;
-    if (!pdf) return;
+    if (!pdf) {
+      return;
+    }
     const page = await pdf.getPage(Number(cv.dataset['page']));
-    if (gen !== this.gen) return; // đã layout lại, bỏ lần vẽ cũ
+    if (gen !== this.gen) {
+      return; // đã layout lại, bỏ lần vẽ cũ
+    }
 
     const vp = page.getViewport({ scale: this.scale });
     const dpr = window.devicePixelRatio || 1;
@@ -141,7 +154,9 @@ export class FrameViewPdfComponent implements OnDestroy {
     try {
       await task.promise;
     } catch (e: any) {
-      if (e?.name !== 'RenderingCancelledException') console.error(e);
+      if (e?.name !== 'RenderingCancelledException') {
+        console.error(e);
+      }
     } finally {
       this.tasks.delete(cv);
     }

@@ -28,5 +28,10 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () => import('./features/profile/profile.component')
       .then(m => m.ProfileComponent)
+  },
+  {
+    path: 'frame-view-pdf',
+    loadComponent: () => import('./features/frame-view-pdf/frame-view-pdf.component')
+      .then(m => m.FrameViewPdfComponent)
   }
 ];
