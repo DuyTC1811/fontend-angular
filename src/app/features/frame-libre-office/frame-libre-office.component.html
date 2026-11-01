@@ -1,0 +1,112 @@
+<div class="lo-page">
+  <header class="lo-header">
+    <h2>Tài liệu</h2>
+    @if (!isEmpty() && !loading()) {
+      <div class="lo-header__actions">
+        <button class="btn" (click)="fileInput.click()" [disabled]="busy()">📤 Upload</button>
+        <button class="btn btn--primary" (click)="openCreate()" [disabled]="busy()">➕ Tạo mới</button>
+      </div>
+    }
+  </header>
+
+  <input #fileInput type="file" hidden [accept]="accept" (change)="onFileSelected(fileInput)"/>
+
+  @if (error()) {
+    <div class="lo-alert">
+      {{ error() }}
+      <button class="lo-alert__close" (click)="error.set(null)">✕</button>
+    </div>
+  }
+
+  @if (loading()) {
+    <p class="lo-muted">Đang tải...</p>
+  } @else if (isEmpty()) {
+    <!-- Chưa có file: 2 lựa chọn -->
+    <div class="lo-empty">
+      <div class="lo-card lo-dropzone"
+           [class.lo-dropzone--over]="dragOver()"
+           (click)="fileInput.click()"
+           (dragover)="onDragOver($event)"
+           (dragleave)="dragOver.set(false)"
+           (drop)="onDrop($event)">
+        <div class="lo-card__icon">📤</div>
+        <h3>Upload file</h3>
+        <p>Kéo thả hoặc bấm để chọn file<br/>
+          <small>docx, xlsx, pptx, odt, pdf… tối đa 50MB</small></p>
+      </div>
+
+      <div class="lo-card">
+        <div class="lo-card__icon">➕</div>
+        <h3>Tạo mới</h3>
+        <div class="lo-types">
+          @for (t of docTypes; track t.value) {
+            <button class="lo-type" (click)="openCreate(t.value)" [disabled]="busy()">
+              <span>{{ t.icon }}</span>{{ t.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Đã có file: danh sách -->
+    <table class="lo-table">
+      <thead>
+      <tr>
+        <th>Tên</th>
+        <th>Version</th>
+        <th>Cập nhật</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (d of docs(); track d.id) {
+          <tr (click)="open(d.id)">
+            <td>{{ iconOf(d.fileExt) }} {{ d.name }}</td>
+            <td>v{{ d.currentVersion }}</td>
+            <td>{{ d.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td class="lo-actions">
+              <button class="btn btn--danger" (click)="remove(d, $event)" [disabled]="busy()">🗑️</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (busy()) {
+    <div class="lo-overlay">
+      <div class="lo-spinner"></div>
+    </div>
+  }
+</div>
+
+<!-- Dialog tạo mới -->
+@if (showCreate()) {
+  <div class="lo-backdrop" (click)="showCreate.set(false)">
+    <div class="lo-dialog" (click)="$event.stopPropagation()">
+      <h3>Tạo tài liệu mới</h3>
+
+      <label>Tên tài liệu</label>
+      <input class="lo-input" autofocus placeholder="VD: Phiếu giải ngân 10/2026"
+             [ngModel]="newName()" (ngModelChange)="newName.set($event)"
+             (keyup.enter)="submitCreate()"/>
+
+      <label>Loại</label>
+      <div class="lo-types">
+        @for (t of docTypes; track t.value) {
+          <button class="lo-type" [class.lo-type--active]="newType() === t.value"
+                  (click)="newType.set(t.value)">
+            <span>{{ t.icon }}</span>{{ t.label }}
+          </button>
+        }
+      </div>
+
+      <div class="lo-dialog__actions">
+        <button class="btn" (click)="showCreate.set(false)">Hủy</button>
+        <button class="btn btn--primary" (click)="submitCreate()"
+                [disabled]="!newName().trim() || busy()">Tạo
+        </button>
+      </div>
+    </div>
+  </div>
+}

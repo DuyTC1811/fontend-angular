@@ -33,5 +33,15 @@ export const routes: Routes = [
     path: 'frame-view-pdf',
     loadComponent: () => import('./features/frame-view-pdf/frame-view-pdf.component')
       .then(m => m.FrameViewPdfComponent)
-  }
+  },
+  {
+    path: 'frame-libre-office',
+    loadComponent: () => import('./features/frame-libre-office/frame-libre-office.component')
+      .then(m => m.FrameLibreOfficeComponent)
+  },
+  {
+    path: 'libre-office/:id',
+    loadComponent: () => import('./features/frame-libre-office-editor/frame-libre-office-editor.component')
+      .then(m => m.FrameLibreOfficeEditorComponent),
+  },
 ];

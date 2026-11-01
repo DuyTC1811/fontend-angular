@@ -1,0 +1,32 @@
+<div class="editor-page">
+  <header class="editor-header">
+    <a class="back" routerLink="/frame-libre-office">← Danh sách</a>
+
+    @if (config(); as cfg) {
+      <span class="title">{{ cfg.document?.title }}</span>
+      @if (ready()) {
+        <span class="badge" [class.badge--warn]="unsaved()">
+          {{ unsaved() ? 'Đang sửa' : 'Đã đồng bộ' }}
+        </span>
+      }
+    }
+  </header>
+
+  @if (editorError()) {
+    <p class="msg msg--error">{{ editorError() }}</p>
+  }
+
+  <div class="editor-body">
+    @if (status.isLoading()) {
+      <p class="msg">Đang tải tài liệu...</p>
+    } @else if (status.error(); as err) {
+      <p class="msg msg--error">Không mở được tài liệu: {{ err.message }}</p>
+    } @else if (config(); as cfg) {
+      <document-editor
+        id="ooEditor"
+        [documentServerUrl]="documentServerUrl"
+        [config]="cfg"
+        [onLoadComponentError]="onLoadComponentError" />
+    }
+  </div>
+</div>
