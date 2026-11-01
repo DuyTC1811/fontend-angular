@@ -1,0 +1,24 @@
+# ===== Stage 1: Build Angular =====
+FROM node:24-alpine AS build
+WORKDIR /app
+
+# Cache layer dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+# Build production (output: dist/<APP_NAME>/browser)
+RUN npm run build -- --configuration production
+
+# ===== Stage 2: Serve bằng Nginx =====
+FROM nginx:1.27-alpine
+ARG APP_NAME=fontend-angular
+
+# Template: nginx image tự envsubst các biến ${...} lúc container start
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /app/dist/${APP_NAME}/browser /usr/share/nginx/html
+
+ENV BACKEND_URL=http://backend:8080
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
