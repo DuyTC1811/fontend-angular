@@ -8,13 +8,13 @@ export interface DocumentItem {
   updatedAt: string;
 }
 
-export interface DocumentCreated {
+export interface DocumentResponse {
   id: string;
   name: string;
   fileExt: string;
 }
 
-export interface CreateDocumentRequest {
+export interface DocumentRequest {
   name: string;
   type: DocType;
 }

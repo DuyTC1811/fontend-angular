@@ -4,7 +4,7 @@ import {
   ACCEPT_EXT,
   DOC_TYPES,
   DocType,
-  DocumentCreated,
+  DocumentResponse,
   DocumentItem,
   MAX_SIZE_MB
 } from "../../core/models/libre-office.model";
@@ -119,7 +119,7 @@ export class FrameLibreOfficeComponent {
     return '📄';
   }
 
-  private run(req: Observable<DocumentCreated>): void {
+  private run(req: Observable<DocumentResponse>): void {
     this.busy.set(true);
     this.error.set(null);
     req.subscribe({
