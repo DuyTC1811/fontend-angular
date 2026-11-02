@@ -4,8 +4,8 @@ import {
   ACCEPT_EXT,
   DOC_TYPES,
   DocType,
-  DocumentResponse,
   DocumentItem,
+  DocumentResponse,
   MAX_SIZE_MB
 } from "../../core/models/libre-office.model";
 import { LibreOfficeService } from "../../core/services/libre-office.service";
@@ -29,7 +29,7 @@ export class FrameLibreOfficeComponent {
   readonly docTypes = DOC_TYPES;
   readonly accept = ACCEPT_EXT.join(',');
 
-  docs = signal<DocumentItem[]>([]);
+  documents = signal<DocumentItem[]>([]);
   loading = signal(true);
   busy = signal(false);
   error = signal<string | null>(null);
@@ -39,17 +39,19 @@ export class FrameLibreOfficeComponent {
   newName = signal('');
   newType = signal<DocType>('DOCX');
 
-  isEmpty = computed(() => !this.loading() && this.docs().length === 0);
+  isEmpty = computed(
+    () => !this.loading() && this.documents().length === 0
+  );
 
   constructor() {
     this.load();
   }
 
-  load(): void {
+  public load(): void {
     this.loading.set(true);
     this.service.list().subscribe({
-      next: d => {
-        this.docs.set(d);
+      next: document => {
+        this.documents.set(document);
         this.loading.set(false);
       },
       error: () => {
@@ -60,20 +62,22 @@ export class FrameLibreOfficeComponent {
   }
 
   // ---------- Upload ----------
-  onFileSelected(input: HTMLInputElement): void {
+  public onFileSelected(input: HTMLInputElement): void {
     const file = input.files?.[0];
-    input.value = '';                       // cho phép chọn lại cùng file
+    input.value = ''; // cho phép chọn lại cùng file
     if (file) this.upload(file);
   }
 
-  onDrop(e: DragEvent): void {
+  public onDrop(e: DragEvent): void {
     e.preventDefault();
     this.dragOver.set(false);
     const file = e.dataTransfer?.files?.[0];
-    if (file) this.upload(file);
+    if (file) {
+      this.upload(file);
+    }
   }
 
-  onDragOver(e: DragEvent): void {
+  public onDragOver(e: DragEvent): void {
     e.preventDefault();
     this.dragOver.set(true);
   }
@@ -100,7 +104,7 @@ export class FrameLibreOfficeComponent {
     this.showCreate.set(true);
   }
 
-  submitCreate(): void {
+  public submitCreate(): void {
     const name = this.newName().trim();
     if (!name) return;
     this.run(this.service.create({ name, type: this.newType() }));
@@ -135,8 +139,8 @@ export class FrameLibreOfficeComponent {
     });
   }
 
-  remove(d: DocumentItem, event: MouseEvent): void {
-    event.stopPropagation();                          // không mở editor khi bấm nút xóa
+  public remove(d: DocumentItem, event: MouseEvent): void {
+    event.stopPropagation(); // không mở editor khi bấm nút xóa
     if (!confirm(`Xóa tài liệu "${d.name}"?`)) {
       return;
     }
@@ -144,7 +148,7 @@ export class FrameLibreOfficeComponent {
     this.busy.set(true);
     this.service.delete(d.id).subscribe({
       next: () => {
-        this.docs.update(list => list.filter(x => x.id !== d.id));
+        this.documents.update(list => list.filter(x => x.id !== d.id));
         this.busy.set(false);
       },
       error: e => {

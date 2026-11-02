@@ -59,13 +59,13 @@
       </tr>
       </thead>
       <tbody>
-        @for (d of docs(); track d.id) {
-          <tr (click)="open(d.id)">
-            <td>{{ iconOf(d.fileExt) }} {{ d.name }}</td>
-            <td>v{{ d.currentVersion }}</td>
-            <td>{{ d.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+        @for (document of documents(); track document.id) {
+          <tr (click)="open(document.id)">
+            <td>{{ iconOf(document.fileExt) }} {{ document.name }}</td>
+            <td>v{{ document.currentVersion }}</td>
+            <td>{{ document.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
             <td class="lo-actions">
-              <button class="btn btn--danger" (click)="remove(d, $event)" [disabled]="busy()">🗑️</button>
+              <button class="btn btn--danger" (click)="remove(document, $event)" [disabled]="busy()">🗑️</button>
             </td>
           </tr>
         }
