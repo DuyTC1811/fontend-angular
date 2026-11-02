@@ -1,6 +1,6 @@
 import { inject, Service } from '@angular/core';
-import { DocumentRequest, DocumentResponse, DocumentItem } from "../models/libre-office.model";
-import { delay, Observable, of, throwError } from "rxjs";
+import { DocumentItem, DocumentRequest, DocumentResponse } from "../models/libre-office.model";
+import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 
 @Service()
