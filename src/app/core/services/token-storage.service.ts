@@ -1,9 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Service, signal } from '@angular/core';
 import { AuthTokens } from '../models/auth.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TokenStorageService {
   private readonly accessTokenKey = 'access_token';
   private readonly refreshTokenKey = 'refresh_token';

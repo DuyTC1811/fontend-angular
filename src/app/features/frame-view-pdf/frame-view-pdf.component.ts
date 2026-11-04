@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, input, OnDestroy, signal, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, input, OnDestroy, signal, untracked, viewChild } from '@angular/core';
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentLoadingTask, PDFDocumentProxy, RenderTask } from 'pdfjs-dist';
 
@@ -35,10 +35,13 @@ export class FrameViewPdfComponent implements OnDestroy {
     effect(() => {
       const src = this.src();
       const viewer = this.viewer()?.nativeElement;
-      if (viewer) {
-        this.open(src, viewer).then(r => {
-        });
+      if (!viewer) return;
+
+      if (!src) { // chưa có dữ liệu → dọn viewer, chờ
+        untracked(() => this.clear());
+        return;
       }
+      untracked(() => void this.open(src, viewer));
     });
   }
 
@@ -170,10 +173,20 @@ export class FrameViewPdfComponent implements OnDestroy {
     this.tasks.clear();
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     clearTimeout(this.resizeTimer);
     this.cancelAll();
     this.ro?.disconnect();
     this.loadingTask?.destroy();
+  }
+
+  private clear() {
+    this.openId++;
+    this.cancelAll();
+    this.pages()?.nativeElement.replaceChildren();
+    this.pdf = undefined;
+    void this.loadingTask?.destroy();
+    this.loadingTask = undefined;
+    this.loading.set(false);
   }
 }

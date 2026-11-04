@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 const USER_KEY = 'auth-user';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class StorageService {
   constructor() {}
 

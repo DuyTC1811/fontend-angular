@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CategoryInfo, CategoryListResp, CreateCategoryReq, UpdateCategoryReq } from '../models/category.model';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CategoryService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:8080/api/categories';
@@ -24,7 +22,7 @@ export class CategoryService {
     return this.http.post<CategoryInfo>(this.baseUrl, request);
   }
 
-  public update( categoryId: string, request: UpdateCategoryReq): Observable<CategoryInfo> {
+  public update(categoryId: string, request: UpdateCategoryReq): Observable<CategoryInfo> {
     return this.http.put<CategoryInfo>(
       `${this.baseUrl}/${categoryId}`,
       request,
