@@ -44,4 +44,9 @@ export const routes: Routes = [
     loadComponent: () => import('./features/frame-libre-office-editor/frame-libre-office-editor.component')
       .then(m => m.FrameLibreOfficeEditorComponent),
   },
+  {
+    path: 'websocket',
+    loadComponent: () => import('./features/websocket/websocket.component')
+      .then(m => m.WebsocketComponent),
+  }
 ];

@@ -1,0 +1,80 @@
+<section class="ws">
+  <header class="ws__header">
+    <h2>WebSocket demo</h2>
+    <span class="badge" [class]="'badge--' + status().toLowerCase()">{{ status() }}</span>
+
+    <div class="ws__connect">
+      @if (me(); as name) {
+        <span>Đăng nhập: <b>{{ name }}</b></span>
+        <button class="btn btn--danger" (click)="disconnect()">Ngắt kết nối</button>
+      } @else {
+        <input
+          [value]="nameInput()"
+          (input)="nameInput.set($any($event.target).value)"
+          (keyup.enter)="connect()"
+          placeholder="Username" />
+        <button class="btn" (click)="connect()" [disabled]="!canConnect()">Kết nối</button>
+      }
+    </div>
+  </header>
+
+  @if (lastError(); as err) {
+    <div class="ws__error">
+      {{ err }}
+      <button (click)="lastError.set(null)">✕</button>
+    </div>
+  }
+
+  <div class="ws__body">
+    <div class="ws__chat">
+      <ul class="ws__messages" #log>
+        @for (m of messages(); track $index) {
+          @if (m.sender === 'system') {
+            <li class="msg msg--system">{{ m.content }}</li>
+          } @else {
+            <li class="msg" [class.msg--me]="m.sender === me()">
+              <div class="msg__meta">
+                <b>{{ m.sender }}</b>
+                <small>{{ m.timestamp | date: 'HH:mm:ss' }}</small>
+              </div>
+              <p>{{ m.content }}</p>
+            </li>
+          }
+        } @empty {
+          <li class="empty">Chưa có tin nhắn</li>
+        }
+      </ul>
+
+      <form class="ws__form" (submit)="send($event)">
+        <input
+          [value]="draft()"
+          (input)="draft.set($any($event.target).value)"
+          [placeholder]="isOpen() ? 'Nhập tin nhắn… (gõ /echo abc để test kênh riêng)' : 'Chưa kết nối'"
+          [disabled]="!isOpen()"
+          autocomplete="off" />
+        <button class="btn" type="submit" [disabled]="!canSend()">Gửi</button>
+      </form>
+    </div>
+
+    <aside class="ws__notifications">
+      <div class="ws__noti-header">
+        <h3>Thông báo</h3>
+        @if (notifications().length) {
+          <button class="link" (click)="clearNotifications()">Xóa</button>
+        }
+      </div>
+
+      @for (n of notifications(); track n.id) {
+        <div class="noti" [class]="'noti noti--' + n.type.toLowerCase()">
+          <div class="noti__title">
+            <b>{{ n.title }}</b>
+            <small>{{ n.createdAt | date: 'HH:mm:ss' }}</small>
+          </div>
+          <p>{{ n.body }}</p>
+        </div>
+      } @empty {
+        <p class="empty">Không có thông báo</p>
+      }
+    </aside>
+  </div>
+</section>
