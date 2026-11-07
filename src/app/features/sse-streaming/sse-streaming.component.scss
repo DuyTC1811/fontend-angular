@@ -1,0 +1,90 @@
+// Khai báo --p là số nguyên để trình duyệt nội suy được (0 → 10 → 20 chạy qua 1,2,3…)
+@property --p {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 0;
+}
+
+$duration: 500ms; // khớp với nhịp gửi event của BE (Thread.sleep(500))
+$height: 22px;
+
+.progress {
+  --p: 0;
+  position: relative;
+  width: 360px;
+  height: $height;
+  margin: 12px 0;
+  border-radius: $height;
+  background: #e9edf2;
+  overflow: hidden;
+  transition: --p $duration linear; // con số chạy cùng tốc độ với thanh
+
+  &__fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #4f8cff, #2bc4a8);
+    transform-origin: left center;
+    transform: scaleX(calc(var(--p) / 100));
+    // transform không gây reflow nên mượt hơn đổi width
+    transition: transform $duration linear, background $duration;
+    will-change: transform;
+  }
+
+  // Con số % chạy theo: counter() đọc giá trị --p đang được nội suy
+  &__label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font: 600 12px/1 system-ui, sans-serif;
+    font-variant-numeric: tabular-nums; // chữ số cùng độ rộng, không bị rung
+    color: #1f2937;
+    counter-reset: pct var(--p);
+
+    &::after {
+      content: counter(pct) '%';
+    }
+  }
+
+  // Đang chạy: vệt sáng quét qua thanh
+  &.running &__fill {
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .45) 50%, transparent 70%) 0 0 / 200% 100%,
+    linear-gradient(90deg, #4f8cff, #2bc4a8);
+    animation: shimmer 1.2s linear infinite;
+  }
+
+  // Xong: chuyển màu xanh lá, nhấp nhẹ một cái
+  &.done &__fill {
+    background: #22c55e;
+    animation: pop 300ms ease-out;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0, 0 0;
+  }
+  to {
+    background-position: -100% 0, 0 0;
+  }
+}
+
+@keyframes pop {
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+// Tôn trọng người dùng đã bật "giảm chuyển động" trong hệ điều hành
+@media (prefers-reduced-motion: reduce) {
+  .progress, .progress__fill {
+    transition: none;
+  }
+  .progress.running .progress__fill {
+    animation: none;
+  }
+}
+
+.err {
+  color: #d32f2f;
+}

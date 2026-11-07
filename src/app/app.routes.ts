@@ -48,5 +48,10 @@ export const routes: Routes = [
     path: 'websocket',
     loadComponent: () => import('./features/websocket/websocket.component')
       .then(m => m.WebsocketComponent),
+  },
+  {
+    path: 'sse-streaming',
+    loadComponent: () => import('./features/sse-streaming/sse-streaming.component')
+      .then(m => m.SseStreamingComponent),
   }
 ];

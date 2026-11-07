@@ -1,0 +1,21 @@
+<h2>SSE Streaming</h2>
+
+<button (click)="start('J01')" [disabled]="progress.isLoading()">Chạy J01</button>
+<button (click)="start('J02')">Chạy J02</button>
+<button (click)="stop()">Dừng</button>
+
+@if (progress.isLoading()) {
+  <p>Đang kết nối…</p>
+}
+@if (progress.error(); as err) {
+  <p class="err">{{ err.message }}</p>
+}
+
+<div class="progress"
+     [class.running]="progress.isLoading() || (percent() > 0 && percent() < 100)"
+     [class.done]="percent() === 100"
+     [style.--p]="percent()"
+     role="progressbar" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="percent()">
+  <div class="progress__fill"></div>
+  <span class="progress__label"></span>
+</div>
