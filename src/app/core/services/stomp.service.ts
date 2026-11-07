@@ -1,8 +1,7 @@
 import { DestroyRef, inject, Service, signal } from '@angular/core';
 import { RxStomp, RxStompState } from "@stomp/rx-stomp";
 import { map, Observable } from "rxjs";
-
-export type WsStatus = 'CONNECTING' | 'OPEN' | 'CLOSING' | 'CLOSED';
+import { WsStatus } from "../models/ws-message";
 
 @Service()
 export class StompService {
@@ -17,14 +16,19 @@ export class StompService {
   constructor() {
     this.rxStomp.connectionState$.subscribe(s => this.status.set(RxStompState[s] as WsStatus));
     this.rxStomp.stompErrors$.subscribe(f => this.lastError.set(f.headers['message'] ?? 'STOMP error'));
-    this.rxStomp.webSocketErrors$.subscribe(() =>
-      this.lastError.set(`Không kết nối được ${this.wsUrl}`),
+    this.rxStomp.webSocketErrors$.subscribe(
+      () => this.lastError.set(`Không kết nối được ${this.wsUrl}`),
     );
-    inject(DestroyRef).onDestroy(() => void this.rxStomp.deactivate());
+    inject(DestroyRef)
+      .onDestroy(
+        () => void this.rxStomp.deactivate()
+      );
   }
 
-  connect(username: string, getToken?: () => string | null): void {
-    if (this.rxStomp.active) return;
+  public connect(username: string, getToken?: () => string | null): void {
+    if (this.rxStomp.active) {
+      return;
+    }
     this.username.set(username);
     this.lastError.set(null);
 
@@ -38,8 +42,9 @@ export class StompService {
         const token = getToken?.();
         client.configure({
           connectHeaders: {
-            username,
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            username, ...(token ? {
+              Authorization: `Bearer ${token}`
+            } : {}),
           },
         });
       },
@@ -54,12 +59,12 @@ export class StompService {
   }
 
   /** Gọi trước hay sau connect đều được – RxStomp tự subscribe lại khi reconnect */
-  watch<T>(destination: string): Observable<T> {
+  public watch<T>(destination: string): Observable<T> {
     return this.rxStomp.watch({ destination }).pipe(map(f => JSON.parse(f.body) as T));
   }
 
   /** retryIfDisconnected: false → không queue, offline thì throw ngay */
-  publish<T>(destination: string, body: T): void {
+  public publish<T>(destination: string, body: T): void {
     this.rxStomp.publish({ destination, body: JSON.stringify(body), retryIfDisconnected: false });
   }
 }

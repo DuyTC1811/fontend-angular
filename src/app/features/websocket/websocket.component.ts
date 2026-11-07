@@ -25,9 +25,15 @@ export class WebsocketComponent {
   readonly messages = signal<ChatMessage[]>([]);
   readonly notifications = signal<NotificationMessage[]>([]);
 
-  readonly isOpen = computed(() => this.status() === 'OPEN');
-  readonly canConnect = computed(() => this.status() === 'CLOSED' && this.nameInput().trim().length > 0);
-  readonly canSend = computed(() => this.isOpen() && this.draft().trim().length > 0);
+  readonly isOpen = computed(
+    () => this.status() === 'OPEN'
+  );
+  readonly canConnect = computed(
+    () => this.status() === 'CLOSED' && this.nameInput().trim().length > 0
+  );
+  readonly canSend = computed(
+    () => this.isOpen() && this.draft().trim().length > 0
+  );
 
   constructor() {
     this.stomp.watch<ChatMessage>('/topic/chat')
@@ -46,13 +52,22 @@ export class WebsocketComponent {
     effect(() => {
       this.messages();
       const el = this.logEl()?.nativeElement;
-      if (el) queueMicrotask(() => (el.scrollTop = el.scrollHeight));
+      if (el) {
+        queueMicrotask(
+          () => (el.scrollTop = el.scrollHeight)
+        );
+      }
     });
   }
 
   connect(): void {
-    if (!this.canConnect()) return;
-    this.stomp.connect(this.nameInput().trim(), () => localStorage.getItem('access_token'));
+    if (!this.canConnect()) {
+      return;
+    }
+    this.stomp.connect(
+      this.nameInput().trim(),
+      () => localStorage.getItem('access_token')
+    );
   }
 
   disconnect(): void {
@@ -61,7 +76,9 @@ export class WebsocketComponent {
 
   send(e: Event): void {
     e.preventDefault();
-    if (!this.canSend()) return;
+    if (!this.canSend()) {
+      return;
+    }
 
     const text = this.draft().trim();
     try {
